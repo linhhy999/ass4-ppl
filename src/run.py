@@ -1,4 +1,5 @@
 import sys,os
+from shutil import copyfile, rmtree
 
 import platform
 import subprocess
@@ -42,9 +43,16 @@ def main(argv):
             suite = unittest.makeSuite(CheckSuite)
             test(suite)
         elif argv[1] == 'CodeGenSuite':
+            if not os.path.exists("test/solutions"):
+                os.makedirs("test/solutions")
             from CodeGenSuite import CheckCodeGenSuite
             suite = unittest.makeSuite(CheckCodeGenSuite)
             test(suite)
+            for i in list(os.walk("test/solutions"))[0][1]:
+                file = "test/solutions/"+str(i)+"/MCClass.j"
+                if os.path.isfile(file):
+                    copyfile(file, "test/solutions/"+str(i)+".j")
+                rmtree("test/solutions/"+str(i))
         else:
             printUsage()
     else:
