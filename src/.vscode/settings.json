@@ -1,0 +1,11 @@
+{
+    "python.pythonPath": "C:\\Users\\maddd\\.pyenv\\pyenv-win\\versions\\3.8.0\\python.exe",
+    "files.exclude": {
+        "**/*.class": true,
+        "external": true,
+        "lib": true,
+        "test/testcases": true,
+        "main/mc/astgen":true,
+        "main/mc/parser":true
+    }
+}
