@@ -1,0 +1,105 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Gen",
+            "type": "shell",
+            "isBackground": true,
+            "command": "python run.py gen",
+            "presentation": {
+                "echo": false,
+                "reveal": "silent",
+                "focus": false,
+                "showReuseMessage": false,
+                "clear": true
+            }
+        },
+        {
+            "dependsOn": "Gen",
+            "label": "LexerSuite",
+            "type": "shell",
+            "command": "python run.py test LexerSuite",
+            "problemMatcher": [],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "dedicated",
+                "showReuseMessage": false,
+                "clear": true
+            }
+        },
+        {
+            "dependsOn": "Gen",
+            "label": "ParserSuite",
+            "type": "shell",
+            "command": "python run.py test ParserSuite",
+            "problemMatcher": [],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "dedicated",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "group": "build"
+        },   
+        {
+            "dependsOn": "Gen",
+            "label": "ASTGenSuite",
+            "type": "shell",
+            "command": "python run.py test ASTGenSuite",
+            "problemMatcher": [],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "dedicated",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "group": "build"
+        },
+        {
+            "dependsOn": "Gen",
+            "label": "CheckSuite",
+            "type": "shell",
+            "command": "python run.py test CheckSuite",
+            "problemMatcher": [],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "dedicated",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "group": {
+                "kind": "build",
+            },
+        },
+        {
+            "dependsOn": "Gen",
+            "label": "CodeGenSuite",
+            "type": "shell",
+            "command": "python run.py test CodeGenSuite",
+            "problemMatcher": [],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "dedicated",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+        }
+
+    ]
+}
