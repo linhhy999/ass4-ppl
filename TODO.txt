@@ -1,0 +1,3 @@
+viết testcase
+làm vardecl:
+	vardecl năm nay có thể khai báo mọi nơi trong hàm, trong khi năm ngoái chỉ khai báo được ở đầu hàm

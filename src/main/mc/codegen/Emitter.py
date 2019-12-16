@@ -380,7 +380,7 @@ class Emitter():
         elif op == "<":  result.append(self.jvm.emitIFICMPGE(labelF))
         elif op == "<=": result.append(self.jvm.emitIFICMPGT(labelF))
         elif op == "<>": result.append(self.jvm.emitIFICMPEQ(labelF))
-        elif op == "=": result.append(self.jvm.emitIFICMPNE(labelF))
+        elif op == "==": result.append(self.jvm.emitIFICMPNE(labelF))
         result.append(self.emitPUSHCONST("1", IntType(), frame))
         frame.pop()
         result.append(self.emitGOTO(labelO, frame))
@@ -560,7 +560,7 @@ class Emitter():
         #label: Int
         #frame: Frame
 
-        return self.jvm.emitGOTO(label)
+        return self.jvm.emitGOTO(str(label))
 ########################## CLASS #############################
     ''' generate some starting directives for a class.<p>
     *   .source MPC.CLASSNAME.java<p>

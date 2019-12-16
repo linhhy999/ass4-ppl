@@ -3,3 +3,4 @@ target
 **/__MACOSX
 **/*.DS_Store
 src/test/solutions
+src/test/testcases
