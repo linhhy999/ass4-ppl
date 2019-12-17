@@ -1178,7 +1178,7 @@ lmao
         expect = "1.0\n"
         self.assertTrue(TestCodeGen.test(input,expect,568))
 
-    def test_put_float(self):
+    def test_simple_put_float(self):
         input = """
         void main(){
             putFloatLn(10.5);
