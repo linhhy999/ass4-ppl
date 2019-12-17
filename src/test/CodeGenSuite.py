@@ -12,7 +12,7 @@ class CheckCodeGenSuite(unittest.TestCase):
     #         abc();
     #         putIntLn(a);
     #         qswe = a;
-    #         putFloatLn(qsWe);
+    #         putFloatLn(qswe);
     #         putBoolLn(i);
     #         putFloatLn(return5float());
     #     }
@@ -357,7 +357,7 @@ class CheckCodeGenSuite(unittest.TestCase):
     #         boolean testShortCircuitHandled(){
     #             int a_temp;boolean b;
     #             a_temp = a = 5;
-    #             return (false && (plusplusa() < 0)) || (a == a_temp);
+    #             return (false && (PlusPlusA() < 0)) || (a == a_temp);
     #         }
     #         int PlusPlusA()
     #         {
@@ -384,7 +384,7 @@ class CheckCodeGenSuite(unittest.TestCase):
     #         boolean testShortCircuitHandled(){
     #             int a_temp;boolean b;
     #             a_temp = a = 5;
-    #             return (true || (plusplusa() < 0)) && (a == a_temp);
+    #             return (true || (PlusPlusA() < 0)) && (a == a_temp);
     #         }
     #         int PlusPlusA()
     #         {
@@ -456,7 +456,7 @@ class CheckCodeGenSuite(unittest.TestCase):
     #     input = """
     #         void main(){
     #             int i;
-    #             for (i=10;i>1;i=i-1){
+    #             for (i=10;i>=1;i=i-1){
     #                 putIntLn(i);
     #             }
     #         }
@@ -497,149 +497,101 @@ class CheckCodeGenSuite(unittest.TestCase):
     #     expect = "26000.0"
     #     self.assertTrue(TestCodeGen.test(input,expect,530))
 
-#     def test_sub_op_float(self):
-#         input =  """void main(){ putFloat(6-327.67); }"""
-#         expect = "-321.67"
-#         self.assertTrue(TestCodeGen.test(input,expect,531))
+    def test_sub_op_float(self):
+        input =  """void main(){ putFloat(6-327.67); }"""
+        expect = "-321.67"
+        self.assertTrue(TestCodeGen.test(input,expect,531))
 
-#     def test_div_op_1_float(self):
-#         input =  """void main(){ putFloat(6/327.67); }"""
-#         expect = "0.018311106"
-#         self.assertTrue(TestCodeGen.test(input,expect,532))
+    def test_div_op_1_float(self):
+        input =  """void main(){ putFloat(6/327.67); }"""
+        expect = "0.018311106"
+        self.assertTrue(TestCodeGen.test(input,expect,532))
 
-#     def test_div_op_2_float(self):
-#         input =  """void main(){ putFloat(6.5/327.67); }"""
-#         expect = "0.019837031"
-#         self.assertTrue(TestCodeGen.test(input,expect,533))
+    def test_div_op_2_float(self):
+        input =  """void main(){ putFloat(6.5/327.67); }"""
+        expect = "0.019837031"
+        self.assertTrue(TestCodeGen.test(input,expect,533))
 
-#     def test_div_op_2_int(self):
-#         input =  """void main(){ putFloat(9/5); }"""
-#         expect = "1.8"
-#         self.assertTrue(TestCodeGen.test(input,expect,534))
+    def test_div_op_2_int(self):
+        input =  """void main(){ putFloat(9/5); }"""
+        expect = "1.0"
+        self.assertTrue(TestCodeGen.test(input,expect,534))
         
-#     def test_ppa(self):
-#         input = """
-#             int a,b,c,d;
-#             void main(){
-#                 b=c=d=pluSPLUsA();
-#                 putInt(a);
-#                 putInt(b);
-#                 putInt(c);
-#                 putInt(d);
-#                 putInt(pluSPLUsA());
-#                 putInt(pluSPLUsA());
-#                 putInt(pluSPLUsA());
-#                 putInt(pluSPLUsA());
-#             }
-#             int PlusPlusA()
-#             {
-#                 a=a+1;
-#                 return a;
-#             }
-#         """
-#         expect = "11112345"
-#         self.assertTrue(TestCodeGen.test(input,expect,535))
+    def test_ppa(self):
+        input = """
+            int a,b,c,d;
+            void main(){
+                b=c=d=PlusPlusA();
+                putInt(a);
+                putInt(b);
+                putInt(c);
+                putInt(d);
+                putInt(PlusPlusA());
+                putInt(PlusPlusA());
+                putInt(PlusPlusA());
+                putInt(PlusPlusA());
+            }
+            int PlusPlusA()
+            {
+                a=a+1;
+                return a;
+            }
+        """
+        expect = "11112345"
+        self.assertTrue(TestCodeGen.test(input,expect,535))
 
-#     def test_float_compare(self):
-#         input = """
-#              void main(){
-#                  putBool(1.23 < 2.19);
-#                  putBool(1.23 < 0.2);
-#                  putBool(1.23 > 2.11);
-#                  putBool(1.23 > (-0.1));
-#                  putBool(1.23 >= 2.1);
-#                  putBool(1.23 >= 1);
-#                  putBool(1.23 >= 1.23);
-#                  putBool(1.23 <= 2.1);
-#                  putBool(1.23 <= 0.12);
-#                  putBool(1.23 <= 1.23);
-#              }
-#         """
-#         expect = "falsetruetruefalsefalsetruefalsetruefalsetruetruetruefalsetrue"
-#         self.assertTrue(TestCodeGen.test(input,expect,536))
+    def test_float_compare(self):
+        input = """
+             void main(){
+                 putBool(1.23 < 2.19);
+                 putBool(1.23 < 0.2);
+                 putBool(1.23 > 2.11);
+                 putBool(1.23 > (-0.1));
+                 putBool(1.23 >= 2.1);
+                 putBool(1.23 >= 1);
+                 putBool(1.23 >= 1.23);
+                 putBool(1.23 <= 2.1);
+                 putBool(1.23 <= 0.12);
+                 putBool(1.23 <= 1.23);
+             }
+        """
+        expect = "falsetruetruefalsefalsetruefalsetruefalsetruetruetruefalsetrue"
+        self.assertTrue(TestCodeGen.test(input,expect,536))
 
-#     def test_while_stmt__1(self):
-#         input = """
-#              void main(){
-#                  int i,s;
-#                 i = 1;
-#                 s = 0;
-#                 do
-#                 {
-#                     s = s + i;
-#                     break;
-#                     i = i + 1;
-#                 }while (i <= 10);
-#                 putInt(s);
-#              }
-#         """
-#         expect = "1"
-#         self.assertTrue(TestCodeGen.test(input,expect,537))
+    def test_while_stmt__1(self):
+        input = """
+             void main(){
+                 int i,s;
+                i = 1;
+                s = 0;
+                do
+                {
+                    s = s + i;
+                    break;
+                    i = i + 1;
+                }while (i <= 10);
+                putInt(s);
+             }
+        """
+        expect = "1"
+        self.assertTrue(TestCodeGen.test(input,expect,537))
 
-#     def test_for_stmt__1(self):
-#         input = """
-#              void main(){
-#                  int i,s;
-#                 s = 0;
-#                 for (i = 10;i>1;i=i-1){
-#                     s = s + i;
-#                     break;
-#                 }
-#                 putInt(s);
-#              }
-#         """
-#         expect = "10"
-#         self.assertTrue(TestCodeGen.test(input,expect,538))
+    def test_for_stmt__1(self):
+        input = """
+             void main(){
+                 int i,s;
+                s = 0;
+                for (i = 10;i>1;i=i-1){
+                    s = s + i;
+                    break;
+                }
+                putInt(s);
+             }
+        """
+        expect = "10"
+        self.assertTrue(TestCodeGen.test(input,expect,538))
 
-#     def test_compicate_if(self):
-#         input = """
-#         boolean foo()
-#         {
-#             putStringLn("hello");
-#             return true;
-#         }
-
-#         void main(){
-#             int x ;
-#             x = 123;
-#             if (x > 100)
-#                 putStringLn("100 < x < 200");
-#             else {
-#                 if (x > 200) putStringLn("200 < x < 300");
-#                 else {
-#                     if (x > 300) putStringLn("x > 300");
-#                     else{
-#                         if (x > 100) x = x + 100;
-#                     }
-#                 }
-#             }
-#             putIntLn(x);
-#         }"""
-#         expect = """100 < x < 200
-# 123
-# """
-#         self.assertTrue(TestCodeGen.test(input, expect, 539))
-
-#     def test_hello(self):
-#         input = """
-#         boolean foo()
-#         {
-#             putStringLn("hello");
-#             return true;
-#         }
-
-#         void main(){
-#             int x ;
-#             x = 123;
-#             if (true && false)
-#                 x = x - 100;
-#             putIntLn(x);
-#         }
-#         """
-#         expect = """123\n"""
-#         self.assertTrue(TestCodeGen.test(input, expect, 540))
-
-    def test_while_lmao(self):
+    def test_compicate_if(self):
         input = """
         boolean foo()
         {
@@ -649,270 +601,317 @@ class CheckCodeGenSuite(unittest.TestCase):
 
         void main(){
             int x ;
-            x = 1;
-            do
-            {
-                putIntLn(x);
-                if (x == 10) putStringLn("lmao");
-                x = x + 1;
-            }while (x <= 10);
-        }
-        """
-        expect = """1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-lmao
-"""
-        self.assertTrue(TestCodeGen.test(input, expect, 541))
-
-    def test_is_prime(self):
-        input = """
-        boolean isPrime(int x)
-        int i ;
-        {
-            for (i = 2;i< x / 2;i=i+1){
-                if (x % i == 0) return false;
+            x = 123;
+            if (x > 100)
+                putStringLn("100 < x < 200");
+            else if (x > 200)
+                putStringLn("200 < x < 300");
+            else if (x > 300)
+                putStringLn("x > 300"){
+                else 
+                if (x > 100)
+                 x = x + 100;
             }
-        
-            return true;
-        }
-        
-        void main();
-        int x, i ;
-        {
-            i = 0;
-            x = 100;
-            do
-            {
-                if (isPrime(i)) putIntLn(i);
-                i = i + 1;
-            }while (i <= x);
-        
-        }
-        """
-        expect = """0
-1
-2
-3
-5
-7
-11
-13
-17
-19
-23
-29
-31
-37
-41
-43
-47
-53
-59
-61
-67
-71
-73
-79
-83
-89
-97
-"""
-        self.assertTrue(TestCodeGen.test(input, expect, 542))
-
-    def test_fact(self):
-        input = """
-        int fact(int x)
-        int i, f ;
-        {
-            f = 1;
-            for (i = 1;i<x;i=i+1){
-                f = f * i;
-            }
-            return f;
-        }
-        
-        void main();
-        int s, i ;
-        {
-            i = 1;
-            s = 0;
-        
-            do 
-            {
-                putIntLn(fact(i));
-                i = i + 1;
-            }while (i <= 10);
-        
-        }
-        """
-        expect = """1
-2
-6
-24
-120
-720
-5040
-40320
-362880
-3628800
-"""
-        self.assertTrue(TestCodeGen.test(input, expect, 543))
-
-    def testnested_with(self):
-        input = """
-        void main(){
-           int x;
-            x = 1;
-            {
-                int x ; 
-                x = 2;
-                {
-                    int x ; 
-                    x = 3;
-                    putInt(x);
-                }
-                putInt(x);
-            }
-        }
-        """
-        expect = """32"""
-        self.assertTrue(TestCodeGen.test(input, expect, 544))
-
-    def test_if_then_else(self):
-        input = """
-
-        int x;
-        
-        boolean foo()
-        {
-            putString("in foo");
-            return false;
-        }
-    
-        void main(){
-            x = 10;
-            if (x > 100 && foo())
-                putStringLn("in then");
-            else
-                putStringLn("in else");
-        }
-        """
-        expect = """in else\n"""
-        self.assertTrue(TestCodeGen.test(input, expect, 545))
-
-    def test_if_then_elsse(self):
-        input = """
-        int x;
-        
-        boolean foo()
-        {
-            putString("in foo ");
-            x = 1000;
-            return true;
-        }
-    
-        void main(){
-            x = 10;
-
-            if (x < 100 && foo()){
-                putStringLn("in then");
-            }
-            else{
-                putStringLn("in else");
-                }
-        }        """
-        expect = """in foo in then\n"""
-        self.assertTrue(TestCodeGen.test(input, expect, 546))
-
-    def test_in_foo(self):
-        input = """
-        int x;
-        
-        boolean foo()
-        {
-            putString("in foo ");
-            return false;
-        }
-    
-        void main(){
-            x = 10;
-
-            if (x < 100 && foo()) {
-                putStringLn("in then");
-            }
-            else{
-                putStringLn("in else");
-                }
-        }        """
-        expect = """in foo in else\n"""
-        self.assertTrue(TestCodeGen.test(input, expect, 547))
-
-    def test_nice(self):
-        input = """
-        int x;
-        
-        boolean foo()
-        {
-            putString("in foo ");
-            x = 1000;
-            return true;
-        }
-    
-        void main(){
-            x = 10;
-
-            if (x > 100 && foo()){
-                putStringLn("in then");
-            }
-            else{
-                putStringLn("in else");
-            }
-    
             putIntLn(x);
-    }        """
-        expect = """in else\n10\n"""
-        self.assertTrue(TestCodeGen.test(input, expect, 548))
+        }"""
+        expect = """100 < x < 200
+123
+"""
+        self.assertTrue(TestCodeGen.test(input, expect, 539))
 
-    def test_float(self):
+    def test_hello(self):
         input = """
-        float foo()
+        boolean foo()
         {
-            return 1;
+            putStringLn("hello");
+            return true;
         }
 
         void main(){
-            putFloat(foo());
+            int x ;
+            x = 123;
+            if (true && false)
+                x = x - 100;
+            putIntLn(x);
         }
         """
-        expect = """1.0"""
-        self.assertTrue(TestCodeGen.test(input, expect, 549))
+        expect = """123\n"""
+        self.assertTrue(TestCodeGen.test(input, expect, 540))
 
-    def test_gcd(self):
-        input = """
-        void main(){
-            int x, y;
-            x = 10;
-            y = 12;
-            putInt(gcd(x + y, x));
-        }
+#     def test_while_lmao(self):
+#         input = """
+#         boolean foo()
+#         {
+#             putStringLn("hello");
+#             return true;
+#         }
 
-        int gcd(int a,int b )
-        {
-            if (b == 0)
-                return a;
-            else
-                return gcd(b, a % b);
-        }        """
-        expect = """2"""
-        self.assertTrue(TestCodeGen.test(input, expect, 550))
+#         void main(){
+#             int x ;
+#             x = 1;
+#             do
+#             {
+#                 putIntLn(x);
+#                 if (x == 10) putStringLn("lmao");
+#                 x = x + 1;
+#             }while (x <= 10);
+#         }
+#         """
+#         expect = """1
+# 2
+# 3
+# 4
+# 5
+# 6
+# 7
+# 8
+# 9
+# 10
+# lmao
+# """
+#         self.assertTrue(TestCodeGen.test(input, expect, 541))
+
+#     def test_is_prime(self):
+#         input = """
+#         boolean isPrime(int x)
+#         int i ;
+#         {
+#             for (i = 2;i< x / 2;i=i+1){
+#                 if (x % i == 0) return false;
+#             }
+        
+#             return true;
+#         }
+        
+#         void main();
+#         int x, i ;
+#         {
+#             i = 0;
+#             x = 100;
+#             do
+#             {
+#                 if (isPrime(i)) putIntLn(i);
+#                 i = i + 1;
+#             }while (i <= x);
+        
+#         }
+#         """
+#         expect = """0
+# 1
+# 2
+# 3
+# 5
+# 7
+# 11
+# 13
+# 17
+# 19
+# 23
+# 29
+# 31
+# 37
+# 41
+# 43
+# 47
+# 53
+# 59
+# 61
+# 67
+# 71
+# 73
+# 79
+# 83
+# 89
+# 97
+# """
+#         self.assertTrue(TestCodeGen.test(input, expect, 542))
+
+#     def test_fact(self):
+#         input = """
+#         int fact(int x)
+#         int i, f ;
+#         {
+#             f = 1;
+#             for (i = 1;i<x;i=i+1){
+#                 f = f * i;
+#             }
+#             return f;
+#         }
+        
+#         void main();
+#         int s, i ;
+#         {
+#             i = 1;
+#             s = 0;
+        
+#             do 
+#             {
+#                 putIntLn(fact(i));
+#                 i = i + 1;
+#             }while (i <= 10);
+        
+#         }
+#         """
+#         expect = """1
+# 2
+# 6
+# 24
+# 120
+# 720
+# 5040
+# 40320
+# 362880
+# 3628800
+# """
+#         self.assertTrue(TestCodeGen.test(input, expect, 543))
+
+#     def testnested_with(self):
+#         input = """
+#         void main(){
+#            int x;
+#             x = 1;
+#             {
+#                 int x ; 
+#                 x = 2;
+#                 {
+#                     int x ; 
+#                     x = 3;
+#                     putInt(x);
+#                 }
+#                 putInt(x);
+#             }
+#         }
+#         """
+#         expect = """32"""
+#         self.assertTrue(TestCodeGen.test(input, expect, 544))
+
+#     def test_if_then_else(self):
+#         input = """
+
+#         int x;
+        
+#         boolean foo()
+#         {
+#             putString("in foo");
+#             return false;
+#         }
+    
+#         void main(){
+#             x = 10;
+#             if (x > 100 && foo())
+#                 putStringLn("in then");
+#             else
+#                 putStringLn("in else");
+#         }
+#         """
+#         expect = """in else\n"""
+#         self.assertTrue(TestCodeGen.test(input, expect, 545))
+
+#     def test_if_then_elsse(self):
+#         input = """
+#         int x;
+        
+#         boolean foo()
+#         {
+#             putString("in foo ");
+#             x = 1000;
+#             return true;
+#         }
+    
+#         void main(){
+#             x = 10;
+
+#             if (x < 100 && foo()){
+#                 putStringLn("in then");
+#             }
+#             else{
+#                 putStringLn("in else");
+#                 }
+#         }        """
+#         expect = """in foo in then\n"""
+#         self.assertTrue(TestCodeGen.test(input, expect, 546))
+
+#     def test_in_foo(self):
+#         input = """
+#         int x;
+        
+#         boolean foo()
+#         {
+#             putString("in foo ");
+#             return false;
+#         }
+    
+#         void main(){
+#             x = 10;
+
+#             if (x < 100 && foo()) {
+#                 putStringLn("in then");
+#             }
+#             else{
+#                 putStringLn("in else");
+#                 }
+#         }        """
+#         expect = """in foo in else\n"""
+#         self.assertTrue(TestCodeGen.test(input, expect, 547))
+
+#     def test_nice(self):
+#         input = """
+#         int x;
+        
+#         boolean foo()
+#         {
+#             putString("in foo ");
+#             x = 1000;
+#             return true;
+#         }
+    
+#         void main(){
+#             x = 10;
+
+#             if (x > 100 && foo()){
+#                 putStringLn("in then");
+#             }
+#             else{
+#                 putStringLn("in else");
+#             }
+    
+#             putIntLn(x);
+#     }        """
+#         expect = """in else\n10\n"""
+#         self.assertTrue(TestCodeGen.test(input, expect, 548))
+
+#     def test_float(self):
+#         input = """
+#         float foo()
+#         {
+#             return 1;
+#         }
+
+#         void main(){
+#             putFloat(foo());
+#         }
+#         """
+#         expect = """1.0"""
+#         self.assertTrue(TestCodeGen.test(input, expect, 549))
+
+#     def test_gcd(self):
+#         input = """
+#         void main(){
+#             int x, y;
+#             x = 10;
+#             y = 12;
+#             putInt(gcd(x + y, x));
+#         }
+
+#         int gcd(int a,int b )
+#         {
+#             if (b == 0)
+#                 return a;
+#             else
+#                 return gcd(b, a % b);
+#         }        """
+#         expect = """2"""
+#         self.assertTrue(TestCodeGen.test(input, expect, 550))
 
 #     def test_assign(self):
 #         input = """
