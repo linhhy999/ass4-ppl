@@ -578,7 +578,7 @@ class CheckCodeGenSuite(unittest.TestCase):
                 putInt(s);
              }
         """
-        expect = "1"
+        expect = "0"
         self.assertTrue(TestCodeGen.test(input,expect,537))
 
     def test_for_stmt__1(self):
