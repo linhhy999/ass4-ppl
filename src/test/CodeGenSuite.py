@@ -63,10 +63,10 @@ class CheckCodeGenSuite(unittest.TestCase):
     def test_giaithua(self):
         input = """
         void main(){
-            putInt(Gt(10));
+            putInt(gt(10));
         }
 
-        int gT(int n){
+        int gt(int n){
             int i,p;
             p = 1;
             for (i = 1;i<n;i=i+1){
@@ -83,13 +83,13 @@ class CheckCodeGenSuite(unittest.TestCase):
     def test_giaithua_de_quy(self):
         input = """
         void main(){
-            putInt(Gt(5));
+            putInt(gt(5));
         }
 
         int gt(int n)
         {
             if (n==0) return 1;
-            else return n*gT(n-1);
+            else return n*gt(n-1);
         }
 
         int q;
@@ -139,8 +139,8 @@ class CheckCodeGenSuite(unittest.TestCase):
                 putFloatLn(3.14159 / 2.51);
                 putBoolLn(true && (1.3>4));
                 putBoolLn(true || (1.3>4));
-                putBoolLn(true && tHen (1.3>4));
-                putBoolLn(true || else (1.3>4));
+                putBoolLn(true && (1.3>4));
+                putBoolLn(true || (1.3>4));
                 putFloatLn(3.14159 + 2);
                 putFloat(3 + 2.51);
             }
@@ -357,7 +357,7 @@ class CheckCodeGenSuite(unittest.TestCase):
             boolean testShortCircuitHandled(){
                 int a_temp;boolean b;
                 a_temp = a = 5;
-                return (false && then (plusplusa() < 0)) || (a == a_temp);
+                return (false && (plusplusa() < 0)) || (a == a_temp);
             }
             int PlusPlusA()
             {
@@ -384,7 +384,7 @@ class CheckCodeGenSuite(unittest.TestCase):
             boolean testShortCircuitHandled(){
                 int a_temp;boolean b;
                 a_temp = a = 5;
-                return (true || else (plusplusa() < 0)) && (a == a_temp);
+                return (true || (plusplusa() < 0)) && (a == a_temp);
             }
             int PlusPlusA()
             {
@@ -803,7 +803,7 @@ int s, i ;
 
     void main(){
         x = 10;
-        if ((x > 100 and) foo()) then
+        if (x > 100 && foo()
             putStringLn("in then");
         else
             putStringLn("in else");
@@ -826,10 +826,12 @@ int s, i ;
     void main(){
         x = 10;
 
-        if ((x < 100 and) foo()) then
+        if (x < 100 && foo()){
             putStringLn("in then");
-        else
+        }
+        else{
             putStringLn("in else");
+        }
     }        """
         expect = """in foo in then\n"""
         self.assertTrue(TestCodeGen.test(input, expect, 546))
@@ -847,10 +849,12 @@ int s, i ;
     void main(){
         x = 10;
 
-        if ((x < 100 and) foo()) then
+        if (x < 100 && foo()) {
             putStringLn("in then");
-        else
+        }
+        else{
             putStringLn("in else");
+        }
     }        """
         expect = """in foo in else\n"""
         self.assertTrue(TestCodeGen.test(input, expect, 547))
@@ -869,10 +873,12 @@ int s, i ;
     void main(){
         x = 10;
 
-        if ((x > 100 and) foo()) then
+        if (x > 100 && foo()){
             putStringLn("in then");
-        else
+        }
+        else{
             putStringLn("in else");
+        }
 
         putIntLn(x);
     }        """
@@ -1016,7 +1022,7 @@ int s, i ;
                 boolean a,b;
                 a = true;
                 b = false;
-                putBool(a && b && then a && not b && test());
+                putBool(a && b && a && not b && test());
             }
             boolean test(){
                 float a;
@@ -1036,7 +1042,7 @@ int s, i ;
                 boolean a,b;
                 a = true;
                 b = false;
-                putBool((a || test()) || else a && not b && test());
+                putBool((a || test()) || a && not b && test());
             }
             boolean test(){
                 float a;
