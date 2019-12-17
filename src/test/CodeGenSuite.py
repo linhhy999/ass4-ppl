@@ -186,9 +186,10 @@ class CheckCodeGenSuite(unittest.TestCase):
         input = """
             int a;
             void main(){
-                if (true)
+                if (true){
                     if (false) putInt(5);
                     else putFloat(5.2);
+                }
                 else putInt(2);
             }
             """
@@ -606,14 +607,14 @@ class CheckCodeGenSuite(unittest.TestCase):
         void main(){
             int x ;
             x = 123;
-            if ((x > 100))
+            if (x > 100)
                 putStringLn("100 < x < 200");
-            else if ((x > 200))
+            else if (x > 200)
                 putStringLn("200 < x < 300");
-            else if ((x > 300))
+            else if (x > 300)
                 putStringLn("x > 300"){
                 else 
-                if ((x > 100))
+                if (x > 100)
                  x = x + 100;
             }
             putIntLn(x);
@@ -803,7 +804,7 @@ int s, i ;
 
     void main(){
         x = 10;
-        if (x > 100 && foo()
+        if (x > 100 && foo())
             putStringLn("in then");
         else
             putStringLn("in else");
@@ -1504,8 +1505,7 @@ int s, i ;
         
         int foo(int a; int b)
         {
-            if a==b
-                then return 111;
+            if (a==b) return 111;
                 else return 222;
         }
         """
