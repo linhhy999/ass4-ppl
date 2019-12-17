@@ -555,7 +555,7 @@ class CheckCodeGenSuite(unittest.TestCase):
                  putBool(1.23 <= 1.23);
              }
         """
-        expect = "falsetruetruefalsefalsetruefalsetruefalsetruetruetruefalsetrue"
+        expect = "truefalsefalsetruefalsetruetruetruefalsetrue"
         self.assertTrue(TestCodeGen.test(input,expect,536))
 
     def test_while_stmt__1(self):
@@ -734,7 +734,7 @@ lmao
         {
             int i, f ;
             f = 1;
-            for (i = 1;i<x;i=i+1){
+            for (i = 1;i<=x;i=i+1){
                 f = f * i;
             }
             return f;
@@ -1625,7 +1625,7 @@ lmao
                 putFloat(1*45+30/12);
             }
         """
-        expect = "47.5"
+        expect = "47.0"
         self.assertTrue(TestCodeGen.test(input,expect,598))
     
     def test_binary_op_div_int(self):
