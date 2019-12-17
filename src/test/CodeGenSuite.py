@@ -117,8 +117,8 @@ class CheckCodeGenSuite(unittest.TestCase):
                 putIntLn(9 + 6);
                 putIntLn(9 - 6);
                 putIntLn(9 * 6);
-                putIntLn(9 div 6);
-                putIntLn(9 mod 6);
+                putIntLn(9 / 6);
+                putIntLn(9 % 6);
                 putBoolLn(9 == 6);
                 putBoolLn(9 <= 6);
                 putBoolLn(9 < 6);
@@ -137,10 +137,10 @@ class CheckCodeGenSuite(unittest.TestCase):
                 putBoolLn(3.14159 >= 2.51);
                 putBoolLn(3.14159 <> 2.51);
                 putFloatLn(3.14159 / 2.51);
-                putBoolLn(true aNd (1.3>4));
-                putBoolLn(true oR (1.3>4));
-                putBoolLn(true aNd tHen (1.3>4));
-                putBoolLn(true or eLse (1.3>4));
+                putBoolLn(true && (1.3>4));
+                putBoolLn(true || (1.3>4));
+                putBoolLn(true && tHen (1.3>4));
+                putBoolLn(true || else (1.3>4));
                 putFloatLn(3.14159 + 2);
                 putFloat(3 + 2.51);
             }
@@ -279,7 +279,7 @@ class CheckCodeGenSuite(unittest.TestCase):
                 for (i=1;i<10;i=i+1)
                     s1=i;
                     for (j=1;j<100;j=j+1){
-                        if ((50<j) and (j<75)) continue;
+                        if ((50<j) && (j<75)) continue;
                         s1 = s1 + j;
                     }
                     for (j=1000;j>1;j=j-1){
@@ -354,10 +354,10 @@ class CheckCodeGenSuite(unittest.TestCase):
                 if (testShortCircuitHandled()) putString("Short circuit handled.");
                 else putString("Short circuit did not handled.");
             }
-            booleAn testShortCircuitHandled(){
+            boolean testShortCircuitHandled(){
                 int a_temp;boolean b;
                 a_temp = a = 5;
-                return (false and then (plusplusa() < 0)) or (a == a_temp);
+                return (false && then (plusplusa() < 0)) || (a == a_temp);
             }
             int PlusPlusA()
             {
@@ -381,10 +381,10 @@ class CheckCodeGenSuite(unittest.TestCase):
                 if (testShortCircuitHandled()) putString("Short circuit handled.");
                 else putString("Short circuit did not handled.");
             }
-            booleAn testShortCircuitHandled(){
+            boolean testShortCircuitHandled(){
                 int a_temp;boolean b;
                 a_temp = a = 5;
-                return (true or else (plusplusa() < 0)) and (a == a_temp);
+                return (true || else (plusplusa() < 0)) && (a == a_temp);
             }
             int PlusPlusA()
             {
@@ -406,9 +406,9 @@ class CheckCodeGenSuite(unittest.TestCase):
         input = """
             void main(){
                 putFloatLn(4);
-                putFloat(intToFloat(5));
+                putFloat(intTofloat(5));
             }
-            float intToFloat(int n)
+            float intTofloat(int n)
             {
                 return n;
             }
@@ -635,7 +635,7 @@ class CheckCodeGenSuite(unittest.TestCase):
         void main(){
             int x ;
             x = 123;
-            if ((true and false))
+            if (true && false)
                 x = x - 100;
             putIntLn(x);
         }
@@ -681,8 +681,8 @@ lmao
 boolean isPrime(int x)
 int i ;
 {
-    for (i = 2;i< x div 2;i=i+1){
-        if (x mod i == 0) return false;
+    for (i = 2;i< x / 2;i=i+1){
+        if (x % i == 0) return false;
     }
 
     return true;
@@ -907,7 +907,7 @@ int s, i ;
             if (b == 0)
                 return a;
             else
-                return gcd(b, a mod b);
+                return gcd(b, a % b);
         }        """
         expect = """2"""
         self.assertTrue(TestCodeGen.test(input, expect, 550))
@@ -922,7 +922,7 @@ int s, i ;
                 b = false;
                 c = "ahihi";
                 d = 1 + 2;
-                putBool(a or b and not b or false);
+                putBool(a || b && not b || false);
                 putString(c);
                 putInt(d);
             }
@@ -930,7 +930,7 @@ int s, i ;
         expect = "trueahihi3"
         self.assertTrue(TestCodeGen.test(input, expect, 551))
 
-    def test_putInt(self):
+    def test_simple_putInt(self):
         input = """
         void main(){
             int X;
@@ -1016,7 +1016,7 @@ int s, i ;
                 boolean a,b;
                 a = true;
                 b = false;
-                putBool(a and b and then a and not b and test());
+                putBool(a && b && then a && not b && test());
             }
             boolean test(){
                 float a;
@@ -1036,7 +1036,7 @@ int s, i ;
                 boolean a,b;
                 a = true;
                 b = false;
-                putBool((a or test()) or else a and not b and test());
+                putBool((a || test()) || else a && not b && test());
             }
             boolean test(){
                 float a;
@@ -1115,7 +1115,7 @@ int s, i ;
         expect = "100.02"
         self.assertTrue(TestCodeGen.test(input,expect,562))
 
-    def test_putFloat(self):
+    def test_simple_putFloat(self):
         input = """
         void main(){
         putFloat(1.4315E7);
@@ -1211,15 +1211,15 @@ int s, i ;
             int a;
             a = 2;
             if (a > 5)
-                if (a mod 2==0)
+                if (a % 2==0)
                     a = a * 2;
                 else
                 {
                 }
             else {
                 a = 11;
-                if (a mod 3 <> 0)
-                    a = a * 3 div 2;
+                if (a % 3 <> 0)
+                    a = a * 3 / 2;
             }
             putInt(a);
         }
@@ -1251,7 +1251,7 @@ int s, i ;
             do
             {
                 a = a + 1;
-                if (a mod 2==0) continue;
+                if (a % 2==0) continue;
                 iSum = iSum + a;
             }while (a < 20);
             putInt(iSum);
@@ -1288,7 +1288,7 @@ int s, i ;
             {
                 a = a + 1;
                 if (a > 17) break;
-                if (a mod 2==0) continue;
+                if (a % 2==0) continue;
                 iSum = iSum + a;
             }while (a < 20);
             putInt(iSum);
@@ -1332,10 +1332,10 @@ int s, i ;
                 {
                     b = b + 1;
                     if (b > 10) break;
-                    if (b mod 2==1) continue;
+                    if (b % 2==1) continue;
                     iSum = iSum + b;
                 }while (b < a); 
-                if (a mod b==0) continue;
+                if (a % b==0) continue;
                 if (a + b > 40) break;
                 iSum = iSum + a;
             }while (a < 20);
@@ -1364,7 +1364,7 @@ int s, i ;
             int a, b, iSum;
             iSum = 0;
             for (a = 0;a<9;a=a+1){
-                if (a mod 2==0) continue;
+                if (a % 2==0) continue;
                 iSum = iSum + a;
             }
             putInt(iSum);
@@ -1395,7 +1395,7 @@ int s, i ;
             iSum = 0;
             for (a = 0;a<9;a=a+1){
                 if (iSum > 27) break;
-                if (a mod 3==0) continue;
+                if (a % 3==0) continue;
                 iSum = iSum + a;
             }
             putInt(iSum);
@@ -1411,11 +1411,11 @@ int s, i ;
             for (a = 0;a<9;a=a+1){
                 for (b = 0;b<a - 1;b=b+1){
                     if (a + b > 17) break;
-                    if (b mod 2==0) continue;
+                    if (b % 2==0) continue;
                     iSum = iSum + b;
                 }
                 if (iSum > 27) break;
-                if (a mod 3 <> 0) continue;
+                if (a % 3 <> 0) continue;
                 iSum = iSum + a;
             }
             putIntLn(iSum);
@@ -1424,7 +1424,7 @@ int s, i ;
         expect = "37\n"
         self.assertTrue(TestCodeGen.test(input,expect,583))
 
-    def test_put_Float(self):
+    def test_put_float(self):
         input = """
         int i, j;
         void main(){
@@ -1441,7 +1441,7 @@ int s, i ;
         """
         expect = "11.811\n"
         self.assertTrue(TestCodeGen.test(input,expect,584))
-        
+
     def test_putInt(self):
         """Program ==> block manipulate data in Main function inner block"""
         input = """
@@ -1506,7 +1506,7 @@ int s, i ;
         expect = "111\n"
         self.assertTrue(TestCodeGen.test(input,expect,587))
 
-    def test_put_Int(self):
+    def test_put_int(self):
         input = """
             void main(){
                 putIntLn(100);
@@ -1632,7 +1632,7 @@ int s, i ;
     def test_binary_op_div_int(self):
         input = """
             void main(){
-                putInt(100 div 3 div 2);
+                putInt(100 / 3 / 2);
             }
         """
         expect = "16"
