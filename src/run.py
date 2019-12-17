@@ -18,7 +18,9 @@ def main(argv):
     if len(argv) < 1:
         printUsage()
     elif argv[0] == 'gen':
-        subprocess.run(["java","-jar",ANTLR_JAR,"-o","../target","-no-listener","-visitor","main/mc/parser/MC.g4"])
+        a = ["java","-jar",ANTLR_JAR,"-o","../target","-no-listener","-visitor","main/mc/parser/MC.g4"]
+        print(" ".join(a))
+        subprocess.run(" ".join(a))
     elif argv[0] == 'clean':
         subprocess.run(["rm","-rf","../target/main"])
     elif argv[0] == 'test':

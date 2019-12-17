@@ -14,7 +14,8 @@
                 "focus": false,
                 "showReuseMessage": false,
                 "clear": true
-            }
+            },
+            "problemMatcher": []
         },
         {
             "dependsOn": "Gen",
@@ -46,7 +47,7 @@
                 "clear": true
             },
             "group": "build"
-        },   
+        },
         {
             "dependsOn": "Gen",
             "label": "ASTGenSuite",
@@ -78,8 +79,8 @@
                 "clear": true
             },
             "group": {
-                "kind": "build",
-            },
+                "kind": "build"
+            }
         },
         {
             "dependsOn": "Gen",
@@ -98,8 +99,7 @@
             "group": {
                 "kind": "build",
                 "isDefault": true
-            },
+            }
         }
-
     ]
 }

@@ -5,6 +5,16 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Python: debug Gen",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceRoot}/run.py",
+            "args": [
+                "gen",
+            ],
+            "console": "integratedTerminal"
+        },
+        {
             "name": "Python: debug CodeGenSuite",
             "type": "python",
             "request": "launch",

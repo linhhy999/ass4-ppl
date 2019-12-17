@@ -3,7 +3,6 @@ from dataclasses import dataclass
 from typing import List
 from Visitor import Visitor
 
-
 class AST(ABC):
     def __eq__(self, other): 
         return self.__dict__ == other.__dict__
@@ -124,6 +123,7 @@ class BinaryOp(Expr):
 
     def accept(self, v, param):
         return v.visitBinaryOp(self, param)
+
 @dataclass
 class UnaryOp(Expr):
     op:str
@@ -169,6 +169,7 @@ class FloatLiteral(Literal):
 
     def accept(self, v, param):
         return v.visitFloatLiteral(self, param)
+
 @dataclass
 class StringLiteral(Literal):
     value:str
@@ -178,6 +179,7 @@ class StringLiteral(Literal):
 
     def accept(self, v, param):
         return v.visitStringLiteral(self, param)
+
 @dataclass
 class BooleanLiteral(Literal):
     value:bool
@@ -229,7 +231,7 @@ class Break(Stmt):
 
     def accept(self, v, param):
         return v.visitBreak(self, param)
-    
+
 class Continue(Stmt):
     def __str__(self):
         return "Continue()"
@@ -259,7 +261,7 @@ class Dowhile(Stmt):
         return v.visitDowhile(self, param)
 
 @dataclass    
-class VarDecl(Decl,BlockMember):
+class VarDecl(Decl, BlockMember):
     variable : str
     varType : Type
 
@@ -288,8 +290,6 @@ class Program(AST):
 
     def __str__(self):
         return "Program([" + ','.join(str(i) for i in self.decl) + "])"
-    
+
     def accept(self, v: Visitor, param):
         return v.visitProgram(self, param)
-
-
