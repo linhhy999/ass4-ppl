@@ -18,7 +18,7 @@ class CheckCodeGenSuite(unittest.TestCase):
         }
         int a;
 
-        int return5(a){
+        int return5(int a){
             return 10-5;
         }
 
@@ -52,7 +52,6 @@ class CheckCodeGenSuite(unittest.TestCase):
 
         string returnstring(string a){
             string b;
-
             b="ewrtgasd";
             return b;
         }
@@ -70,8 +69,9 @@ class CheckCodeGenSuite(unittest.TestCase):
         int gT(int n){
             int i,p;
             p = 1;
-            for i = 1 to n do
+            for (i = 1;i<n;i=i+1){
                 p = p * i;
+                }
             return p;
         }
 
@@ -246,11 +246,10 @@ class CheckCodeGenSuite(unittest.TestCase):
             void main(){
                 int s,i;
                 s=0;
-                for i=1 to 10 do
-                    {
-                        s=s+i;
-                        if (i==6) break;
-                    }
+                for (i=1;i<10;i=i+1){
+                    s=s+i;
+                    if (i==6) break;
+                }
                 putInt(s);
             }
             """
@@ -262,11 +261,10 @@ class CheckCodeGenSuite(unittest.TestCase):
             void main(){
                 int s,i;
                 s=0;
-                for i=1 to 10 do
-                    {
-                        if (i==6) continue;
-                        s=s+i;
-                    }
+                for (i=1;i<10;i=i+1){
+                    if (i==6) continue;
+                    s=s+i;
+                }
                 putInt(s);
             }
             """
@@ -278,24 +276,21 @@ class CheckCodeGenSuite(unittest.TestCase):
             void main(){
                 int s,s1,i ,j;
                 s=0;
-                for i=1 to 10 do
-                    {
-                        s1=i;
-                        for j=1 to 100 do
-                            {
-                                if ((50<j) and (j<75)) continue;
-                                s1 = s1 + j;
-                            }
-                        for j=1000 downto 1 do 
-                            {
-                                if ((j<1000)) continue;
-                                s1 =s1-j;
-                                continue;
-                            }
-                        if (i==6) continue;
-                        s=s+s1;
+                for (i=1;i<10;i=i+1)
+                    s1=i;
+                    for (j=1;j<100;j=j+1){
+                        if ((50<j) and (j<75)) continue;
+                        s1 = s1 + j;
+                    }
+                    for (j=1000;j>1;j=j-1){
+                        if ((j<1000)) continue;
+                        s1 =s1-j;
                         continue;
                     }
+                    if (i==6) continue;
+                    s=s+s1;
+                    continue;
+                }
                 putInt(s);
             }
             """
@@ -307,10 +302,9 @@ class CheckCodeGenSuite(unittest.TestCase):
             int q,w;
             void main(){
                 int a;
-                for a=1 to 3 do 
-                {
-                    putInt(1);
-                    if (a>1) break;
+                for (a=1;a<3;a=a+1){
+                putInt(1);
+                if (a>1) break;
                 }
             }
         """
@@ -322,11 +316,11 @@ class CheckCodeGenSuite(unittest.TestCase):
         void main(){
             int i,s;
             i=s=0;
-            while i<=10 do
+            do
             {
                 s = s+i;
                 i=i+1;
-            }
+            }while (i<=10);
             s=s*2;
             putInt(s);
             return;
@@ -462,7 +456,9 @@ class CheckCodeGenSuite(unittest.TestCase):
         input = """
             void main(){
                 int i;
-                for i=10 downto 1 do putIntLn(i);
+                for (i=10;i>1;i=i-1){
+                    putIntLn(i);
+                }
             }
         """
         expect = "10\n9\n8\n7\n6\n5\n4\n3\n2\n1\n"
@@ -572,12 +568,12 @@ class CheckCodeGenSuite(unittest.TestCase):
                  int i,s;
                 i = 1;
                 s = 0;
-                while (i <= 10) do
+                do
                 {
                     s = s + i;
                     break;
                     i = i + 1;
-                }
+                }while (i <= 10);
                 putInt(s);
              }
         """
@@ -589,8 +585,7 @@ class CheckCodeGenSuite(unittest.TestCase):
              void main(){
                  int i,s;
                 s = 0;
-                for i = 10 downto 1 do
-                {
+                for (i = 10;i>1;i=i-1){
                     s = s + i;
                     break;
                 }
@@ -659,13 +654,12 @@ class CheckCodeGenSuite(unittest.TestCase):
         void main(){
             int x ;
             x = 1;
-            while x <= 10 do
+            do
             {
- putIntLn(x);
+                putIntLn(x);
                 if (x == 10) putStringLn("lmao");
-
                 x = x + 1;
-            }
+            }while (x <= 10);
         }
         """
         expect = """1
@@ -687,8 +681,7 @@ lmao
 boolean isPrime(int x)
 int i ;
 {
-    for i = 2 to x div 2 do
-    {
+    for (i = 2;i< x div 2;i=i+1){
         if (x mod i == 0) return false;
     }
 
@@ -700,12 +693,11 @@ int x, i ;
 {
     i = 0;
     x = 100;
-
-    while i <= x do
+    do
     {
         if (isPrime(i)) putIntLn(i);
         i = i + 1;
-    }
+    }while (i <= x);
 
 }
         """
@@ -745,7 +737,9 @@ int fact(int x)
 int i, f ;
 {
     f = 1;
-    for i = 1 to x do f = f * i;
+    for (i = 1;i<x;i=i+1){
+        f = f * i;
+    }
     return f;
 }
 
@@ -755,11 +749,11 @@ int s, i ;
     i = 1;
     s = 0;
 
-    while i <= 10 do 
+    do 
     {
         putIntLn(fact(i));
         i = i + 1;
-    }
+    }while (i <= 10);
 
 }
         """
@@ -1005,11 +999,11 @@ int s, i ;
                 float b;
                 i = 8 ;
                 a = 1 ;
-                while (i>0) do {
+                do {
                     a = a * i;
                     i = i - 1;
                     if (i == 4) break;
-                }
+                }while (i>0);
                 putInt(a);
             }
             """
@@ -1064,7 +1058,7 @@ int s, i ;
 
                 up = 10;
                 a = 0;
-                for i=up downto 1 do {
+                for (i=up;i>1;i=i-1){
                     if (a > 40) continue;
                     a = a + i;
                 }
@@ -1238,11 +1232,11 @@ int s, i ;
         void main(){
             int a;
             a = 1;
-            while a < 5 do
+            do
             {
                 putInt(a);
                 a = a + 1;
-            }
+            }while (a < 5);
         }
         """
         expect = "1234"
@@ -1254,12 +1248,12 @@ int s, i ;
             int a, iSum;
             a = 0;
             iSum = 0;
-            while a < 20 do
+            do
             {
                 a = a + 1;
                 if (a mod 2==0) continue;
                 iSum = iSum + a;
-            }
+            }while (a < 20);
             putInt(iSum);
         }
         """
@@ -1272,12 +1266,12 @@ int s, i ;
             int a, iSum;
             a = 0;
             iSum = 0;
-            while a < 20 do
+            do
             {
                 a = a + 1;
                 if (a > 17) break;
                 iSum = iSum + a;
-            }
+            }while (a < 20);
             putInt(iSum);
         }
         """
@@ -1290,13 +1284,13 @@ int s, i ;
             int a, iSum;
             a = 0;
             iSum = 0;
-            while a < 20 do
+            do
             {
                 a = a + 1;
                 if (a > 17) break;
                 if (a mod 2==0) continue;
                 iSum = iSum + a;
-            }
+            }while (a < 20);
             putInt(iSum);
         }
         """
@@ -1308,17 +1302,17 @@ int s, i ;
         void main(){
             int a, b, iSum;
             a = b = iSum = 0;
-            while a < 20 do
+            do
             {
                 b = 0;
                 a = a + 1;
-                while b < a do
+                do
                 {
                     b = b + 1;
                     iSum = iSum + b;
-                }
+                }while (b < a);
                 iSum = iSum + a;
-            }
+            }while (a < 20);
             putInt(iSum);
         }
         """
@@ -1330,21 +1324,21 @@ int s, i ;
         void main(){
             int a, b, iSum;
             a = b = iSum = 0;
-            while a < 20 do
+            do
             {
                 b = 0;
                 a = a + 1;
-                while b < a do
+                do
                 {
                     b = b + 1;
                     if (b > 10) break;
                     if (b mod 2==1) continue;
                     iSum = iSum + b;
-                }
+                }while (b < a); 
                 if (a mod b==0) continue;
                 if (a + b > 40) break;
                 iSum = iSum + a;
-            }
+            }while (a < 20);
             putInt(iSum);
         }
         """
@@ -1355,8 +1349,7 @@ int s, i ;
         input = """
         void main(){
             int a;
-            for a = 0 to 10 do
-            {
+            for (a = 0;a<10;a=a+1){
                 putInt(a);
                 break;
             }
@@ -1370,8 +1363,7 @@ int s, i ;
         void main(){
             int a, b, iSum;
             iSum = 0;
-            for a = 0 to 9 do
-            {
+            for (a = 0;a<9;a=a+1){
                 if (a mod 2==0) continue;
                 iSum = iSum + a;
             }
@@ -1386,8 +1378,7 @@ int s, i ;
         void main(){
             int a, b, iSum;
             iSum = 0;
-            for a = 0 to 9 do
-            {
+            for (a = 0;a<9;a=a+1){
                 if (iSum > 27) break;
                 iSum = iSum + a;
             }
@@ -1402,8 +1393,7 @@ int s, i ;
         void main(){
             int a, b, iSum;
             iSum = 0;
-            for a = 0 to 9 do
-            {
+            for (a = 0;a<9;a=a+1){
                 if (iSum > 27) break;
                 if (a mod 3==0) continue;
                 iSum = iSum + a;
@@ -1418,10 +1408,8 @@ int s, i ;
         input = """void main(){
             int a, b, iSum;
             iSum = 0;
-            for a = 0 to 9 do
-            {
-                for b = 0 to a - 1 do
-                {
+            for (a = 0;a<9;a=a+1){
+                for (b = 0;b<a - 1;b=b+1){
                     if (a + b > 17) break;
                     if (b mod 2==0) continue;
                     iSum = iSum + b;
