@@ -1363,7 +1363,7 @@ lmao
         void main(){
             int a, b, iSum;
             iSum = 0;
-            for (a = 0;a<9;a=a+1){
+            for (a = 0;a<=9;a=a+1){
                 if (a % 2==0) continue;
                 iSum = iSum + a;
             }
