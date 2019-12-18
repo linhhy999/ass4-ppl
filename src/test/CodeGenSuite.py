@@ -143,7 +143,7 @@ class CheckCodeGenSuite(unittest.TestCase):
                 putFloat(3 + 2.51);
             }
         """
-        expect = "15\n3\n54\n1\n3\nfalse\nfalse\nfalse\ntrue\ntrue\ntrue\n1.5\n5.6515903\n0.6315901\n7.885391\n1.2516296\nfalse\nfalse\nfalse\ntrue\ntrue\ntrue\n1.2516296\nfalse\ntrue\nfalse\ntrue\n5.14159\n5.51"
+        expect = "15\n3\n54\n1\n3\nfalse\nfalse\nfalse\ntrue\ntrue\ntrue\n1.0\n5.6515903\n0.6315901\n7.885391\n1.2516296\nfalse\nfalse\ntrue\ntrue\n1.2516296\nfalse\ntrue\nfalse\ntrue\n5.14159\n5.51"
         self.assertTrue(TestCodeGen.test(input,expect,505))
 
     def test_unaryop_all(self):
@@ -267,7 +267,7 @@ class CheckCodeGenSuite(unittest.TestCase):
                 putInt(s);
             }
             """
-        expect = "49"
+        expect = "39"
         self.assertTrue(TestCodeGen.test(input,expect,514))
 
     def test_complex_continue(self):
@@ -275,19 +275,19 @@ class CheckCodeGenSuite(unittest.TestCase):
             void main(){
                 int s,s1,i ,j;
                 s=0;
-                for (i=1;i<10;i=i+1){
+                for (i = 1; i <= 10; i = i + 1){
                     s1=i;
-                    for (j=1;j<100;j=j+1){
+                    for (j=1;j<=100;j=j+1){
                         if ((50<j) && (j<75)) continue;
                         s1 = s1 + j;
                     }
-                    for (j=1000;j>1;j=j-1){
+                    for (j=1000; j >= 1; j = j - 1){
                         if (j<1000) continue;
-                        s1 =s1-j;
+                        s1 = s1-j;
                         continue;
                     }
-                    if (i==6) continue;
-                    s=s+s1;
+                    if (i == 6) continue;
+                    s = s + s1;
                     continue;
                 }
                 putInt(s);
@@ -679,7 +679,7 @@ lmao
         boolean isPrime(int x)
         {
             int i ;
-            for (i = 2;i< x / 2;i=i+1){
+            for (i = 2; i <= x / 2; i = i + 1){
                 if (x % i == 0) return false;
             }
             return true;
@@ -765,7 +765,7 @@ lmao
 """
         self.assertTrue(TestCodeGen.test(input, expect, 543))
 
-    def testnested_with(self):
+    def test_nested_with(self):
         input = """
         void main(){
             int x;
@@ -1047,7 +1047,7 @@ lmao
                 return res;
             }
             """
-        expect = "9.5true"
+        expect = "true"
         self.assertTrue(TestCodeGen.test(input, expect, 557))
 
     def test_for1(self):
@@ -1328,17 +1328,16 @@ lmao
             {
                 b = 0;
                 a = a + 1;
-                do
-                {
+                do {
                     b = b + 1;
                     if (b > 10) break;
-                    if (b % 2==1) continue;
+                    if (b % 2 == 1) continue;
                     iSum = iSum + b;
-                }while (b < a); 
-                if (a % b==0) continue;
+                } while (b < a);
+                if (a % b == 0) continue;
                 if (a + b > 40) break;
                 iSum = iSum + a;
-            }while (a < 20);
+            } while (a < 20);
             putInt(iSum);
         }
         """
@@ -1405,21 +1404,22 @@ lmao
         self.assertTrue(TestCodeGen.test(input,expect,582))
 
     def test_isum_compicate(self):
-        input = """void main(){
-            int a, b, iSum;
-            iSum = 0;
-            for (a = 0;a<9;a=a+1){
-                for (b = 0;b<a - 1;b=b+1){
-                    if (a + b > 17) break;
-                    if (b % 2==0) continue;
-                    iSum = iSum + b;
+        input = """
+            void main(){
+                int a, b, iSum;
+                iSum = 0;
+                for (a = 0; a <= 9; a = a + 1){
+                    for (b = 0; b <= a - 1; b = b+1){
+                        if (a + b > 17) break;
+                        if (b % 2 == 0) continue;
+                        iSum = iSum + b;
+                    }
+                    if (iSum > 27) break;
+                    if (a % 3 != 0) continue;
+                    iSum = iSum + a;
                 }
-                if (iSum > 27) break;
-                if (a % 3 != 0) continue;
-                iSum = iSum + a;
+                putIntLn(iSum);
             }
-            putIntLn(iSum);
-        }
         """
         expect = "37\n"
         self.assertTrue(TestCodeGen.test(input,expect,583))

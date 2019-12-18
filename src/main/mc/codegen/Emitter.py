@@ -343,7 +343,7 @@ class Emitter():
         #frame: Frame
 
         frame.pop()
-        return self.jvm.emitIREM()
+        return JasminCode.INDENT + "irem" + JasminCode.END
 
     '''
     *   generate iand
@@ -363,7 +363,7 @@ class Emitter():
         frame.pop()
         return self.jvm.emitIOR()
 
-    def emitREOP(self, op, in_, frame):
+    def __emitREOP(self, op, in_, frame):
         #op: String
         #in_: Type
         #frame: Frame
@@ -379,7 +379,7 @@ class Emitter():
         elif op == ">=": result.append(self.jvm.emitIFICMPLT(labelF))
         elif op == "<":  result.append(self.jvm.emitIFICMPGE(labelF))
         elif op == "<=": result.append(self.jvm.emitIFICMPGT(labelF))
-        elif op == "<>": result.append(self.jvm.emitIFICMPEQ(labelF))
+        elif op == "!=": result.append(self.jvm.emitIFICMPEQ(labelF))
         elif op == "==": result.append(self.jvm.emitIFICMPNE(labelF))
         result.append(self.emitPUSHCONST("1", IntType(), frame))
         frame.pop()
@@ -389,32 +389,11 @@ class Emitter():
         result.append(self.emitLABEL(labelO, frame))
         return ''.join(result)
 
-    def emitREFOP(self, op, in_, frame):
-        if type(in_) is IntType or type(in_) is BoolType: return self.emitREOP(op, in_, frame)
+    def emitREOP(self, op, in_, frame):
+        if type(in_) is IntType or type(in_) is BoolType:
+            return self.__emitREOP(op, in_, frame)
         else:
-            result = self.jvm.emitFCMPL() + self.emitPUSHICONST(0,frame) + self.emitREOP(op, in_, frame)
-            return result
-
-    def emitRELOP(self, op, in_, trueLabel, falseLabel, frame):
-        #op: String
-        #in_: Type
-        #trueLabel: Int
-        #falseLabel: Int
-        #frame: Frame
-        #..., value1, value2 -> ..., result
-
-        result = list()
-
-        frame.pop()
-        frame.pop()
-        if   op == ">":  result.append(self.jvm.emitIFICMPLE(falseLabel))
-        elif op == ">=": result.append(self.jvm.emitIFICMPLT(falseLabel))
-        elif op == "<":  result.append(self.jvm.emitIFICMPGE(falseLabel))
-        elif op == "<=": result.append(self.jvm.emitIFICMPGT(falseLabel))
-        elif op == "!=": result.append(self.jvm.emitIFICMPEQ(falseLabel))
-        elif op == "=": result.append(self.jvm.emitIFICMPNE(falseLabel))
-        result.append(self.jvm.emitGOTO(trueLabel))
-        return ''.join(result)
+            return self.jvm.emitFCMPL() + self.emitPUSHICONST(0,frame) + self.__emitREOP(op, in_, frame)
 ######################### METHOD #############################
     '''   generate the method directive for a function.
     *   @param lexeme the qualified name of the method(i.e., class-name/method-name).

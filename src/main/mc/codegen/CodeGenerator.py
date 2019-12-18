@@ -206,8 +206,10 @@ class CodeGenVisitor(BaseVisitor, Utils):
         e.printout(varDecl)
 ############## STMTs ################
     def visitStmt(self, ast, o):
-        if isinstance(ast, CallExpr) or (isinstance(ast, BinaryOp) and ast.op == "="):
-                e.printout(self.visit(ast, o)[0])
+        if isinstance(ast, CallExpr):
+            e.printout(self.visit(ast, o)[0])
+        elif (isinstance(ast, BinaryOp) and ast.op == "="):
+            e.printout(self.visit(ast, o)[0] + e.emitPOP(o.frame))
         else:
             self.visit(ast, o)
 
@@ -226,20 +228,18 @@ class CodeGenVisitor(BaseVisitor, Utils):
         frame = o.frame
         nenv = o.sym
         e.printout(self.visit(ast.expr, Access(frame, nenv, False, True))[0])
+        exitLabel = frame.getNewLabel()
         if ast.elseStmt is None:
-            exitLabel = frame.getNewLabel()
-            e.printout(e.emitIFFALSE(exitLabel,frame))
+            e.printout(e.emitIFFALSE(exitLabel, frame))
             self.visitStmt(ast.thenStmt, o)
             if type(ast.thenStmt) is not Block:
                 if type(ast.thenStmt) is not Return:
                     e.printout(e.emitGOTO(exitLabel, frame))
             elif type(ast.thenStmt.member[-1]) is not Return:
                 e.printout(e.emitGOTO(exitLabel, frame))
-            e.printout(e.emitLABEL(exitLabel, frame))
         else:
             falseLabel = frame.getNewLabel()
-            exitLabel = frame.getNewLabel()
-            e.printout(e.emitIFFALSE(falseLabel,frame))
+            e.printout(e.emitIFFALSE(falseLabel, frame))
             self.visitStmt(ast.thenStmt, o)
             if type(ast.thenStmt) is not Block:
                 if type(ast.thenStmt) is not Return:
@@ -248,24 +248,25 @@ class CodeGenVisitor(BaseVisitor, Utils):
                 e.printout(e.emitGOTO(exitLabel, frame))
             e.printout(e.emitLABEL(falseLabel, frame))
             self.visitStmt(ast.elseStmt, o)
-            e.printout(e.emitLABEL(exitLabel, frame))
+        e.printout(e.emitLABEL(exitLabel, frame))
 
     def visitDowhile(self, ast, o):
         frame = o.frame
-        initDowhile = ""
 
+        labelStart = frame.getNewLabel()
         labelCondition = frame.getNewLabel()
         labelExit = frame.getNewLabel()
         frame.conLabel += [labelCondition]
         frame.brkLabel += [labelExit]
-        exp, expT = self.visit(ast.exp, Access(frame, o.sym, False, True))
-        initDowhile = e.emitLABEL(labelCondition, frame)
+        initDowhile = e.emitLABEL(labelStart, frame)
         e.printout(initDowhile)
 
         for i in ast.sl: self.visitStmt(i, o)
 
-        exitDowhile = exp + \
-                      e.emitIFTRUE(labelCondition, frame) + \
+        exp, expT = self.visit(ast.exp, Access(frame, o.sym, False, True))
+        exitDowhile = e.emitLABEL(labelCondition, frame) + \
+                      exp + \
+                      e.emitIFTRUE(labelStart, frame) + \
                       e.emitLABEL(labelExit, frame)
         e.printout(exitDowhile)
         frame.conLabel = frame.conLabel[:-1]
@@ -284,7 +285,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
         expr2, expr2t = self.visit(ast.expr2, Access(frame, o.sym, False, True))
         if not(type(expr2t) is BoolType): raise TypeMismatchInStatement(ast)
 
-        forInit = expr1
+        forInit = expr1 + e.emitPOP(o.frame)
         forCondition  = e.emitLABEL(labelCondition, frame) + \
                         expr2 + \
                         e.emitIFFALSE(labelExit,frame)
@@ -293,7 +294,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
         self.visitStmt(ast.loop, o)
 
         forIncrement = e.emitLABEL(labelIncrement, frame)
-        forIncrement += self.visit(ast.expr3, Access(frame, o.sym, False, True))[0]
+        forIncrement += self.visit(ast.expr3, Access(frame, o.sym, False, True))[0] + e.emitPOP(o.frame)
         forIncrement += e.emitGOTO(labelCondition, frame)
         e.printout(forIncrement)
         e.printout(e.emitLABEL(labelExit, frame))
@@ -325,7 +326,8 @@ class CodeGenVisitor(BaseVisitor, Utils):
         if ast.op == "=":
             right, typeRight = self.visit(ast.right, Access(frame, o.sym, False, True))
             left, typeLeft = self.visit(ast.left, Access(frame, o.sym, True, True))
-            return right + (e.emitI2F(frame) if type(typeLeft) is FloatType and type(typeRight) is IntType else "") + left, typeLeft
+            leftload, typeLL = self.visit(ast.left, Access(frame, o.sym, False, True))
+            return right + (e.emitI2F(frame) if type(typeLeft) is FloatType and type(typeRight) is IntType else "") + left + leftload, typeLeft
             # return right + left, typeLeft
         left, typeLeft = self.visit(ast.left, o)
         right, typeRight = self.visit(ast.right, o)
@@ -343,16 +345,16 @@ class CodeGenVisitor(BaseVisitor, Utils):
                 return left + right + e.emitDIV(frame), IntType()
             else: return left + right + e.emitMULOP(ast.op, typeLeft, frame), typeLeft
         elif ast.op == '%': return left + right + e.emitMOD(frame), IntType()
-        elif ast.op in ['>','>=','<','<=','!=','==']: return left + right + e.emitREFOP(ast.op, typeLeft, frame), BoolType()
-        elif ast.op.lower() == '&&':
+        elif ast.op in ['>','>=','<','<=','!=','==']: return left + right + e.emitREOP(ast.op, typeLeft, frame), BoolType()
+        elif ast.op == '&&':
             falseLabel = frame.getNewLabel()
             exitLabel = frame.getNewLabel()
-            ret = left + self.emit.emitIFFALSE(falseLabel,frame) + right + self.emit.emitIFFALSE(falseLabel,frame) + self.emit.emitPUSHICONST(1,frame) + self.emit.emitGOTO(exitLabel,frame) + self.emit.emitLABEL(falseLabel,frame) + self.emit.emitPUSHICONST(0,frame) + self.emit.emitLABEL(exitLabel,frame)
+            ret = left + e.emitIFFALSE(falseLabel,frame) + right + e.emitIFFALSE(falseLabel,frame) + e.emitPUSHICONST(1,frame) + e.emitGOTO(exitLabel,frame) + e.emitLABEL(falseLabel,frame) + e.emitPUSHICONST(0,frame) + e.emitLABEL(exitLabel,frame)
             return ret, BoolType()
-        elif ast.op.lower() == '||':
+        elif ast.op == '||':
             trueLabel = frame.getNewLabel()
             exitLabel = frame.getNewLabel()
-            ret = left + self.emit.emitIFTRUE(trueLabel,frame) + right + self.emit.emitIFTRUE(trueLabel,frame) + self.emit.emitPUSHICONST(0,frame) + self.emit.emitGOTO(exitLabel,frame) + self.emit.emitLABEL(trueLabel,frame) + self.emit.emitPUSHICONST(1,frame) + self.emit.emitLABEL(exitLabel,frame)
+            ret = left + e.emitIFTRUE(trueLabel,frame) + right + e.emitIFTRUE(trueLabel,frame) + e.emitPUSHICONST(0,frame) + e.emitGOTO(exitLabel,frame) + e.emitLABEL(trueLabel,frame) + e.emitPUSHICONST(1,frame) + e.emitLABEL(exitLabel,frame)
             return ret, BoolType()
         else: raise Exception("Wrong binop: " + str(ast.op))
 
@@ -360,7 +362,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
         ctxt = o
         frame = ctxt.frame
         body, typeBody = self.visit(ast.body, o)
-        if ast.op.lower() =='not':
+        if ast.op =='!':
             return body + e.emitNOT(typeBody,frame), typeBody
         elif ast.op == '-':
             return body + e.emitNEGOP(typeBody,frame), typeBody
