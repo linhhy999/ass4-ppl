@@ -5,3 +5,4 @@ target
 src/test/solutions
 src/test/testcases
 **/MCClass.class
+src/shuffleTestcase.py
